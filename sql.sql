@@ -1,0 +1,1 @@
+INSERT INTO aprendices (nombre, apellido, edad, cedula, correo) VALUES ('Juan Manuel', 'Mosquera vargas', '1081152302', '1081152302', 'catfished03@gmail.com')
