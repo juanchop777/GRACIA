@@ -1,0 +1,324 @@
+/* Reset específico para la página de recuperación */
+.recovery-page * {
+  margin: 0;
+  padding: 0;
+box-sizing: border-box;
+font-family: 'Georgia', 'Times New Roman', serif !important;
+}
+
+.recovery-page {
+  font-family: 'Georgia', 'Times New Roman', serif !important;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #8b7355 0%, #8b7355 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Imagen de fondo con difuminado */
+.recovery-page::before {
+content: "";
+background-position: left center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("img/trocca-Pica.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: -2;
+}
+
+.recovery-page .background-overlay {
+  position: fixed;
+top: 0;
+opacity: 0.7;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  z-index: -1;
+}
+
+.recovery-page .container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.recovery-page .card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px
+    rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.recovery-page .card-header {
+  text-align: center;
+  padding: 40px 40px 20px;
+  background: linear-gradient(135deg, rgba(252, 252, 252, 0.1) 0%, rgba(251, 251, 251, 0.1) 100%);
+}
+
+.recovery-page .logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #8b7355 0%, #8b7355 100%);
+  border-radius: 20px;
+  color: white;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 25px rgba(139, 115, 85, 0.3);
+}
+
+.recovery-page .card-header h1 {
+  font-size: 28px !important;
+  font-weight: 600;
+  color: #1f2937 !important;
+  margin-bottom: 8px;
+  letter-spacing: -0.025em;
+}
+
+.recovery-page .subtitle {
+  color: #6b7280 !important;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.recovery-page .card-body {
+  padding: 20px 40px 40px;
+}
+
+.recovery-page .form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.recovery-page .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recovery-page .form-group label {
+  font-size: 14px !important;
+  font-weight: 500;
+  color: #374151 !important;
+  margin-bottom: 4px;
+}
+
+.recovery-page .input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.recovery-page .input-icon {
+  position: absolute;
+  left: 16px;
+  color: #9ca3af;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.recovery-page .input-wrapper input {
+  width: 100% !important;
+  padding: 16px 16px 16px 48px !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+  color: #1f2937 !important;
+}
+
+.recovery-page .input-wrapper input:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.recovery-page .input-wrapper input::placeholder {
+  color: #9ca3af !important;
+}
+
+.recovery-page .btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 24px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.recovery-page .btn-primary {
+  background: linear-gradient(135deg, #8b7355 0%, #8b7355 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 14px rgba(139, 115, 85, 0.3);
+}
+
+.recovery-page .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 115, 85, 0.4);
+}
+
+.recovery-page .btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.recovery-page .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.recovery-page .alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.recovery-page .alert-error {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #dc2626 !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+.recovery-page .alert-success {
+  background: rgba(16, 185, 129, 0.1) !important;
+  color: #059669 !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+.recovery-page .success-state {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.recovery-page .success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 50%;
+  color: white;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+.recovery-page .success-state h3 {
+  font-size: 24px !important;
+  font-weight: 600;
+  color: #1f2937 !important;
+  margin-bottom: 12px;
+}
+
+.recovery-page .success-state p {
+  color: #6b7280 !important;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.recovery-page .card {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.recovery-page .btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.recovery-page .btn:hover::before {
+  left: 100%;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .recovery-page .container {
+    padding: 16px;
+  }
+
+  .recovery-page .card {
+    border-radius: 16px;
+  }
+
+  .recovery-page .card-header {
+    padding: 32px 24px 16px;
+  }
+
+  .recovery-page .card-body {
+    padding: 16px 24px 32px;
+  }
+
+  .recovery-page .card-header h1 {
+    font-size: 24px !important;
+  }
+
+  .recovery-page .logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+  }
+
+  .recovery-page .input-wrapper input {
+    padding: 14px 14px 14px 44px !important;
+    font-size: 16px !important;
+  }
+
+  .recovery-page .btn {
+    padding: 14px 20px !important;
+    font-size: 15px !important;
+  }
+}

@@ -8,7 +8,7 @@
     <title>Nosotros - GraciaShoes</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
+ <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
     <!-- Header -->
@@ -191,5 +191,12 @@
     </footer>
 
     <script src="script.js"></script>
+    <?php if (!empty($error)): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            openLoginModal();
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

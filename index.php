@@ -12,6 +12,10 @@ if (isset($_GET['error'])) {
             break;
     }
 }
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']);
+}
 
 $success = '';
 if (isset($_GET['registered']) && $_GET['registered'] == 'true') {
@@ -32,10 +36,11 @@ if (isset($_GET['logout']) && $_GET['logout'] == 'success') {
     <title>GraciaShoes - Elegancia en Cada Paso</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
+ <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
     <!-- Header -->
+
     <header class="header">
         <div class="container">
             <div class="nav-wrapper">
@@ -241,5 +246,12 @@ if (isset($_GET['logout']) && $_GET['logout'] == 'success') {
     </footer>
 
     <script src="script.js"></script>
+    <?php if (!empty($error)): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            openLoginModal();
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

@@ -219,6 +219,100 @@ window.onclick = function(event) {
 // Inicializar carrito al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
+
+    // --- Recuperación de contraseña moderna ---
+    window.openRecoverModal = function() {
+        document.getElementById('recoverModal').style.display = 'block';
+        document.getElementById('recover-step-correo').style.display = 'block';
+        document.getElementById('recover-step-pin').style.display = 'none';
+        document.getElementById('recover-step-nueva').style.display = 'none';
+        document.getElementById('recover-step-final').style.display = 'none';
+        document.getElementById('recover-error').style.display = 'none';
+        document.getElementById('recover-success').style.display = 'none';
+        document.getElementById('recoverCorreoForm').reset();
+        document.getElementById('recoverPinForm').reset();
+        document.getElementById('recoverNuevaForm').reset();
+    }
+    window.closeRecoverModal = function() {
+        document.getElementById('recoverModal').style.display = 'none';
+    }
+    if (document.getElementById('openRecoverModal')) {
+        document.getElementById('openRecoverModal').onclick = function(e) {
+            e.preventDefault();
+            openRecoverModal();
+        }
+    }
+    if (document.getElementById('recoverCorreoForm')) {
+        document.getElementById('recoverCorreoForm').onsubmit = function(e) {
+            e.preventDefault();
+            var correo = document.getElementById('recoverCorreo').value;
+            fetch('ajax_recuperar_contrasena.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'step=correo&correo=' + encodeURIComponent(correo)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('recover-step-correo').style.display = 'none';
+                    document.getElementById('recover-step-pin').style.display = 'block';
+                    document.getElementById('recover-error').style.display = 'none';
+                    document.getElementById('recover-success').style.display = 'block';
+                    document.getElementById('recover-success').innerText = data.message;
+                } else {
+                    document.getElementById('recover-error').style.display = 'block';
+                    document.getElementById('recover-error').innerText = data.message;
+                }
+            });
+        }
+    }
+    if (document.getElementById('recoverPinForm')) {
+        document.getElementById('recoverPinForm').onsubmit = function(e) {
+            e.preventDefault();
+            var pin = document.getElementById('recoverPin').value;
+            fetch('ajax_recuperar_contrasena.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'step=pin&pin=' + encodeURIComponent(pin)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('recover-step-pin').style.display = 'none';
+                    document.getElementById('recover-step-nueva').style.display = 'block';
+                    document.getElementById('recover-error').style.display = 'none';
+                    document.getElementById('recover-success').style.display = 'block';
+                    document.getElementById('recover-success').innerText = data.message;
+                } else {
+                    document.getElementById('recover-error').style.display = 'block';
+                    document.getElementById('recover-error').innerText = data.message;
+                }
+            });
+        }
+    }
+    if (document.getElementById('recoverNuevaForm')) {
+        document.getElementById('recoverNuevaForm').onsubmit = function(e) {
+            e.preventDefault();
+            var nueva = document.getElementById('recoverNueva').value;
+            var confirmar = document.getElementById('recoverConfirmar').value;
+            fetch('ajax_recuperar_contrasena.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'step=nueva&nueva_contrasena=' + encodeURIComponent(nueva) + '&confirmar_contrasena=' + encodeURIComponent(confirmar)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('recover-step-nueva').style.display = 'none';
+                    document.getElementById('recover-step-final').style.display = 'block';
+                    document.getElementById('recover-error').style.display = 'none';
+                } else {
+                    document.getElementById('recover-error').style.display = 'block';
+                    document.getElementById('recover-error').innerText = data.message;
+                }
+            });
+        }
+    }
 });
 
 // Agregar estilos CSS para las notificaciones
@@ -300,259 +394,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-// Encapsular todo en una función autoejecutable para evitar conflictos globales
-;(() => {
-  // Variables globales para el carrito
-  let cart = JSON.parse(localStorage.getItem("cart")) || []
-  let currentSlide = 0
-
-  // Funciones del carrito
-  window.addToCart = (id, name, price) => {
-    const existingItem = cart.find((item) => item.id === id)
-
-    if (existingItem) {
-      existingItem.quantity += 1
-    } else {
-      cart.push({
-        id: id,
-        name: name,
-        price: price,
-        quantity: 1,
-      })
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart))
-    updateCartCount()
-    showNotification("Producto añadido al carrito")
-  }
-
-  window.removeFromCart = (id) => {
-    cart = cart.filter((item) => item.id !== id)
-    localStorage.setItem("cart", JSON.stringify(cart))
-    updateCartCount()
-    updateCartDisplay()
-  }
-
-  window.updateQuantity = (id, newQuantity) => {
-    if (newQuantity <= 0) {
-      window.removeFromCart(id)
-      return
-    }
-
-    const item = cart.find((item) => item.id === id)
-    if (item) {
-      item.quantity = newQuantity
-      localStorage.setItem("cart", JSON.stringify(cart))
-      updateCartCount()
-      updateCartDisplay()
-    }
-  }
-
-  function updateCartDisplay() {
-    const cartItems = document.getElementById("cart-items")
-    const cartTotal = document.getElementById("cart-total")
-
-    if (!cartItems || !cartTotal) return
-
-    if (cart.length === 0) {
-      cartItems.innerHTML = "<p>Tu carrito está vacío</p>"
-      cartTotal.textContent = "0.00"
-      return
-    }
-
-    let html = ""
-    let total = 0
-
-    cart.forEach((item) => {
-      const itemTotal = item.price * item.quantity
-      total += itemTotal
-
-      html += `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <h4>${item.name}</h4>
-                        <p>$${item.price.toFixed(2)} c/u</p>
-                    </div>
-                    <div class="cart-item-controls">
-                        <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
-                        <button onclick="removeFromCart('${item.id}')" class="remove-btn">🗑️</button>
-                    </div>
-                    <div class="cart-item-total">$${itemTotal.toFixed(2)}</div>
-                </div>
-            `
-    })
-
-    cartItems.innerHTML = html
-    cartTotal.textContent = total.toFixed(2)
-  }
-
-  function updateCartCount() {
-    const cartCount = document.getElementById("cart-count")
-    if (cartCount) {
-      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
-      cartCount.textContent = `(${totalItems})`
-    }
-  }
-
-  function showNotification(message) {
-    const notification = document.createElement("div")
-    notification.className = "notification"
-    notification.textContent = message
-    notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #8b7355;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 5px;
-            z-index: 10000;
-            animation: slideIn 0.3s ease;
-        `
-
-    document.body.appendChild(notification)
-
-    setTimeout(() => {
-      notification.remove()
-    }, 3000)
-  }
-
-  // Funciones del modal del carrito
-  window.openCartModal = () => {
-    const modal = document.getElementById("cartModal")
-    if (modal) {
-      modal.style.display = "block"
-      updateCartDisplay()
-    }
-  }
-
-  window.closeCartModal = () => {
-    const modal = document.getElementById("cartModal")
-    if (modal) {
-      modal.style.display = "none"
-    }
-  }
-
-  // Función para proceder al checkout
-  window.proceedToCheckout = () => {
-    // Verificar si hay productos en el carrito
-    if (cart.length === 0) {
-      alert("Tu carrito está vacío")
-      return
-    }
-
-    // Verificar si el usuario está autenticado
-    const loginButton = document.querySelector('.login-btn[onclick*="openLoginModal"]')
-
-    if (loginButton) {
-      // Usuario no autenticado - mostrar modal de login con mensaje específico
-      window.closeCartModal()
-      showLoginForCheckout()
-      return
-    }
-
-    // Usuario autenticado - proceder al checkout
-    window.location.href = "checkout.php"
-  }
-
-  // Nueva función para mostrar login específicamente para checkout
-  function showLoginForCheckout() {
-    const loginModal = document.getElementById("loginModal")
-    if (!loginModal) return
-
-    const loginContainer = loginModal.querySelector(".login-form-container")
-
-    // Añadir mensaje específico para checkout
-    const existingMessage = loginContainer.querySelector(".checkout-message")
-    if (!existingMessage) {
-      const checkoutMessage = document.createElement("div")
-      checkoutMessage.className = "alert alert-info checkout-message"
-      checkoutMessage.innerHTML = "🛒 Para completar tu compra necesitas iniciar sesión o crear una cuenta"
-
-      const title = loginContainer.querySelector("h2")
-      title.insertAdjacentElement("afterend", checkoutMessage)
-    }
-
-    window.openLoginModal()
-  }
-
-  // Funciones del modal de login
-  window.openLoginModal = () => {
-    const modal = document.getElementById("loginModal")
-    if (modal) {
-      modal.style.display = "block"
-    }
-  }
-
-  window.closeLoginModal = () => {
-    const modal = document.getElementById("loginModal")
-    if (modal) {
-      modal.style.display = "none"
-
-      // Eliminar mensaje de checkout si existe
-      const checkoutMessage = document.querySelector(".checkout-message")
-      if (checkoutMessage) {
-        checkoutMessage.remove()
-      }
-    }
-  }
-
-  // Funciones del carrusel
-  function showSlide(n) {
-    const slides = document.querySelectorAll(".carousel-slide")
-    const dots = document.querySelectorAll(".dot")
-
-    if (!slides.length) return
-
-    slides[currentSlide].classList.remove("active")
-    dots[currentSlide].classList.remove("active")
-
-    currentSlide = (n + slides.length) % slides.length
-
-    slides[currentSlide].classList.add("active")
-    dots[currentSlide].classList.add("active")
-  }
-
-  window.nextSlide = () => {
-    showSlide(currentSlide + 1)
-  }
-
-  window.prevSlide = () => {
-    showSlide(currentSlide - 1)
-  }
-
-  window.currentSlide = (n) => {
-    showSlide(n - 1)
-  }
-
-  // Cerrar modales al hacer clic fuera
-  window.onclick = (event) => {
-    const loginModal = document.getElementById("loginModal")
-    const cartModal = document.getElementById("cartModal")
-
-    if (event.target === loginModal) {
-      window.closeLoginModal()
-    }
-    if (event.target === cartModal) {
-      window.closeCartModal()
-    }
-  }
-
-  // Inicializar cuando el DOM esté listo
-  document.addEventListener("DOMContentLoaded", () => {
-    updateCartCount()
-
-    // Auto-play del carrusel
-    setInterval(window.nextSlide, 5000)
-
-    // Añadir estilos CSS
-    const style = document.createElement("style")
-    style.textContent = `
-            
-        `
-    document.head.appendChild(style)
-  })
-})()
 

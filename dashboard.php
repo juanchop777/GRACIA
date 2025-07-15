@@ -2,11 +2,21 @@
 session_start();
 require_once 'config.php';
 
-// Verificar autenticación
-if (!isset($_SESSION['usuario_id'])) {
+// Verificar que el usuario esté logueado
+if (!estaLogueado()) {
     header('Location: index.php');
-    exit();
+    exit;
 }
+
+// Obtener información del usuario
+$usuario = obtenerUsuarioActual();
+if (!$usuario) {
+    header('Location: logout.php');
+    exit;
+}
+
+// Obtener pedidos del usuario
+$pedidos = obtenerPedidos($usuario['id'], 10);
 ?>
 
 <!DOCTYPE html>
@@ -16,6 +26,8 @@ if (!isset($_SESSION['usuario_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Cuenta - GraciaShoes</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+     <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
     <!-- Header -->
@@ -23,7 +35,9 @@ if (!isset($_SESSION['usuario_id'])) {
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <a href="index.php"><h1>GraciaShoes</h1></a>
+                    <a href="index.php">
+                        <img src="img/gracie.png" alt="GraciaShoes Logo" style="height:70px;">
+                    </a>
                 </div>
                 <nav class="nav">
                     <a href="index.php">INICIO</a>
@@ -34,9 +48,10 @@ if (!isset($_SESSION['usuario_id'])) {
                 </nav>
                 <div class="header-actions">
                     <a href="dashboard.php" class="login-btn">MI CUENTA</a>
-                    <div class="cart">
-                        <span class="cart-icon">🛍️</span>
-                        <span class="cart-count">(0)</span>
+                    <a href="logout.php" class="login-btn">CERRAR SESIÓN</a>
+                    <div class="cart" onclick="openCartModal()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">(0)</span>
                     </div>
                 </div>
             </div>
@@ -44,88 +59,96 @@ if (!isset($_SESSION['usuario_id'])) {
     </header>
 
     <!-- Dashboard Content -->
-    <main class="main-content">
-        <div class="container">
-            <div class="dashboard">
-                <div class="dashboard-container">
-                    <div class="dashboard-header">
-                        <div class="dashboard-title">
-                            <h1>Mi Cuenta</h1>
-                            <p>Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre']); ?></p>
-                        </div>
-                        <a href="logout.php" class="btn btn-secondary">Cerrar sesión</a>
+    <main class="dashboard">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Mi Cuenta</h1>
+                    <p>Bienvenido/a, <?php echo htmlspecialchars($usuario['nombre']); ?></p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Información Personal -->
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-user"></i> Información Personal</h2>
+                    <p>Gestiona tu información de cuenta</p>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>Nombre:</strong> <?php echo htmlspecialchars($usuario['nombre']); ?></p>
+                        <p><strong>Correo:</strong> <?php echo htmlspecialchars($usuario['correo']); ?></p>
+                        <p><strong>Rol:</strong> <?php echo ucfirst($usuario['rol']); ?></p>
                     </div>
-                    
-                    <div class="dashboard-grid">
-                        <div class="dashboard-card">
-                            <h2>Mi Perfil</h2>
-                            <p>Gestiona tu información personal y preferencias</p>
-                            <button class="btn btn-primary" onclick="location.href='perfil.php'">Ver perfil</button>
-                        </div>
-                        
-                        <div class="dashboard-card">
-                            <h2>Mis Pedidos</h2>
-                            <p>Revisa el estado de tus pedidos y compras anteriores</p>
-                            <button class="btn btn-primary" onclick="location.href='mis-pedidos.php'">Ver pedidos</button>
-                        </div>
-                        
-                        <div class="dashboard-card">
-                            <h2>Lista de Deseos</h2>
-                            <p>Productos que has guardado para comprar más tarde</p>
-                            <button class="btn btn-primary" onclick="location.href='lista-deseos.php'">Ver lista</button>
-                        </div>
-                        
-                        <div class="dashboard-card">
-                            <h2>Ir a la Tienda</h2>
-                            <p>Explora nuestro catálogo completo de productos</p>
-                            <button class="btn btn-primary" onclick="location.href='tienda.php'">Ver productos</button>
-                        </div>
-                        
-                        <div class="dashboard-card">
-                            <h2>Direcciones</h2>
-                            <p>Gestiona tus direcciones de envío</p>
-                            <button class="btn btn-primary" onclick="location.href='direcciones.php'">Gestionar direcciones</button>
-                        </div>
-                        
-                        <div class="dashboard-card">
-                            <h2>Métodos de Pago</h2>
-                            <p>Administra tus tarjetas y métodos de pago</p>
-                            <button class="btn btn-primary" onclick="location.href='metodos-pago.php'">Gestionar pagos</button>
-                        </div>
+                </div>
+
+             
+                <!-- Acciones Rápidas -->
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-bolt"></i> Acciones Rápidas</h2>
+                    <p>Accesos directos a funciones importantes</p>
+                    <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <a href="tienda.php" class="btn btn-secondary">Explorar Tienda</a>
+                        <a href="colecciones.php" class="btn btn-secondary">Ver Colecciones</a>
+                        <a href="contacto.php" class="btn btn-secondary">Contactar Soporte</a>
+                        <a href="pedidos.php" class="btn btn-secondary">Ver Mis Pedidos</a>
                     </div>
                 </div>
             </div>
+
+            <!-- Tabla de Pedidos Completa -->
+            <?php if (!empty($pedidos)): ?>
+            <div style="margin-top: 2rem;">
+                <h2>Historial Completo de Pedidos</h2>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Fecha</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($pedidos as $pedido): ?>
+                        <tr>
+                            <td><?php echo substr($pedido['id'], 0, 8); ?>...</td>
+                            <td><?php echo date('d/m/Y H:i', strtotime($pedido['fecha'])); ?></td>
+                            <td><?php echo $pedido['total_items']; ?> items</td>
+                            <td>$<?php echo number_format($pedido['total_pedido'] ?? 0, 2); ?></td>
+                            <td>
+                                <span class="role-badge role-<?php echo $pedido['estado']; ?>">
+                                    <?php echo ucfirst($pedido['estado']); ?>
+                                </span>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php endif; ?>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>GraciaShoes</h3>
-                    <p>Elegancia y comodidad en cada paso.</p>
+    <!-- Modal del Carrito -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <div class="cart-container">
+                <h2>Carrito de Compras</h2>
+                <div id="cart-items">
+                    <p>Tu carrito está vacío</p>
                 </div>
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul>
-                        <li><a href="index.php">Inicio</a></li>
-                        <li><a href="tienda.php">Tienda</a></li>
-                        <li><a href="nosotros.php">Nosotros</a></li>
-                        <li><a href="contacto.php">Contacto</a></li>
-                    </ul>
+                <div class="cart-total">
+                    <h3>Total: $<span id="cart-total">0.00</span></h3>
                 </div>
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <p>📧 info@graciashoes.com</p>
-                    <p>📱 +57 3116448364</p>
-                    <p>📍 Rivera Huila (centro arriba)</p>
+                <div class="cart-actions">
+                    <button class="btn btn-secondary" onclick="closeCartModal()">Seguir Comprando</button>
+                    <button class="btn btn-primary" onclick="proceedToCheckout()">Proceder al Pago</button>
                 </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 GraciaShoes. Todos los derechos reservados.</p>
             </div>
         </div>
-    </footer>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

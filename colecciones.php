@@ -8,7 +8,7 @@
     <title>Colecciones - GraciaShoes</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
+ <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
     <!-- Header -->
@@ -75,6 +75,26 @@
         </div>
     </div>
     <?php endif; ?>
+
+    <!-- Modal del Carrito -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <div class="cart-container">
+                <h2>Carrito de Compras</h2>
+                <div id="cart-items">
+                    <p>Tu carrito está vacío</p>
+                </div>
+                <div class="cart-total">
+                    <h3>Total: $<span id="cart-total">0.00</span></h3>
+                </div>
+                <div class="cart-actions">
+                    <button class="btn btn-secondary" onclick="closeCartModal()">Seguir Comprando</button>
+                    <button class="btn btn-primary" onclick="proceedToCheckout()">Proceder al Pago</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Collections Content -->
     <main class="main-content">
@@ -221,5 +241,12 @@
     </footer>
 
     <script src="script.js"></script>
+    <?php if (!empty($error)): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            openLoginModal();
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

@@ -6,6 +6,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Aquí procesarías el formulario de contacto
     $mensaje_enviado = true;
 }
+
+$error = null;
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Contacto - GraciaShoes</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
+ <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
     <!-- Header -->
@@ -240,5 +246,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </footer>
 
     <script src="script.js"></script>
+    <?php if (!empty($error)): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            openLoginModal();
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>
