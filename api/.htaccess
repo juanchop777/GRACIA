@@ -1,0 +1,6 @@
+# Pasar cabecera Authorization a PHP (Apache a veces la quita)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>

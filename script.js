@@ -168,12 +168,13 @@ function updateCartDisplay() {
 }
 
 function proceedToCheckout() {
+    // Recarga el carrito desde localStorage por si hay cambios recientes
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cart.length === 0) {
         alert('Tu carrito está vacío');
         return;
     }
-    
-    // Aquí puedes redirigir a la página de checkout
+    // Si hay productos, permite proceder al pago
     window.location.href = 'checkout.php';
 }
 

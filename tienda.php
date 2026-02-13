@@ -572,7 +572,6 @@ $usar_productos_db = $total_productos_db > 0;
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
             if (cart.length === 0) {
-                cartItems.innerHTML = '<p>Tu carrito está vacío</p>';
                 cartTotal.textContent = '0.00';
             } else {
                 cartItems.innerHTML = cart.map(item => `

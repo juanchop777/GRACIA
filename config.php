@@ -3,7 +3,7 @@
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'graciashoess');
 define('DB_USER', 'root'); // Cambia por tu usuario
-define('DB_PASS', 'root'); // Cambia por tu contraseña
+define('DB_PASS', 'root'); // Contraseña de MySQL en Laragon (vacío '' o 'root')
 define('DB_CHARSET', 'utf8mb4');
 
 // Función para conectar a la base de datos
@@ -208,7 +208,7 @@ function obtenerPedidos($usuario_id = null, $limite = null) {
             $params[] = $usuario_id;
         }
         
-        $sql .= " GROUP BY p.id ORDER BY p.fecha DESC";
+        $sql .= " GROUP BY p.id, u.id ORDER BY p.fecha DESC";
         
         if ($limite) {
             $sql .= " LIMIT ?";
